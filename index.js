@@ -51,18 +51,31 @@ Product.find()
 app.get('/products', async (req,res) => {
     try {
         const result = await Product.find();
-        res.json(result);
+        //res.json(result);
+        res.status(200).json(result)
     }
     catch (err) {
         console.log(err);
     }
 });
 
-app.get('/products/:id', async (req,res) => {
+app.get('/products/:id', async (req, res) => {
     const id = req.params.id; 
-    const product =  await Product.findById(id);
-    res.json(product);
-
+    try {
+        const product = await Product.findById(id);
+        if (product) {
+            res.json(product);
+        } else {
+            // id is in right format but product can't be found
+            res.status(404).json({ msg: 'Not found' });
+        }
+    } catch (err) {
+        // if id is invalid (like 345234)     
+        res.status(500).json({ 
+            msg: 'Server error or invalid id',
+            error: err.message 
+        });
+    }
 });
 
 const PORT = process.env.PORT || 5000;
