@@ -58,6 +58,12 @@ app.get('/products', async (req,res) => {
     }
 });
 
+app.get('/products/:id', async (req,res) => {
+    const id = req.params.id; 
+    const product =  await Product.findById(id);
+    res.json(product);
+
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
